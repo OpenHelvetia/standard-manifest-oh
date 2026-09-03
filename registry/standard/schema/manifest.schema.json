@@ -1,0 +1,227 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ld.openhelvetia.swiss/ns/manifest/schema/2026-08-15/manifest.schema.json",
+  "title": "OpenHelvetia Manifest v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "@context",
+    "@id",
+    "@type",
+    "title",
+    "publisher",
+    "license",
+    "interfaces",
+    "issued"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://ld.openhelvetia.swiss/ns/manifest/schema/2026-08-15/manifest.schema.json"
+    },
+    "@context": {
+      "const": "https://ld.openhelvetia.swiss/ns/manifest/v1"
+    },
+    "@id": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://"
+    },
+    "@type": {
+      "const": "Manifest"
+    },
+    "title": {
+      "$ref": "#/$defs/languageMap"
+    },
+    "description": {
+      "$ref": "#/$defs/languageMap"
+    },
+    "keyword": {
+      "$ref": "#/$defs/languageMapArray"
+    },
+    "publisher": {
+      "$ref": "#/$defs/iri"
+    },
+    "license": {
+      "$ref": "#/$defs/iri"
+    },
+    "landingPage": {
+      "$ref": "#/$defs/iri"
+    },
+    "legalBasis": {
+      "$ref": "#/$defs/iri"
+    },
+    "conformsTo": {
+      "$ref": "#/$defs/iriOrArray"
+    },
+    "exactMatch": {
+      "$ref": "#/$defs/iriOrArray"
+    },
+    "interfaces": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/interface"
+      }
+    },
+    "issued": {
+      "type": "string",
+      "format": "date"
+    },
+    "modified": {
+      "type": "string",
+      "format": "date"
+    }
+  },
+  "$defs": {
+    "iri": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://"
+    },
+    "iriOrArray": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/iri"
+        },
+        {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/iri"
+          }
+        }
+      ]
+    },
+    "languageMap": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "propertyNames": {
+        "enum": [
+          "de",
+          "fr",
+          "it",
+          "rm",
+          "en"
+        ]
+      },
+      "patternProperties": {
+        "^(de|fr|it|rm|en)$": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "languageMapArray": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "propertyNames": {
+        "enum": [
+          "de",
+          "fr",
+          "it",
+          "rm",
+          "en"
+        ]
+      },
+      "patternProperties": {
+        "^(de|fr|it|rm|en)$": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "interface": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "@type",
+        "endpoint",
+        "auth"
+      ],
+      "properties": {
+        "@type": {
+          "enum": [
+            "McpInterface",
+            "SparqlInterface",
+            "RestInterface",
+            "DownloadInterface"
+          ]
+        },
+        "endpoint": {
+          "$ref": "#/$defs/iri"
+        },
+        "docs": {
+          "$ref": "#/$defs/iri"
+        },
+        "conformsTo": {
+          "$ref": "#/$defs/iriOrArray"
+        },
+        "auth": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "authType"
+          ],
+          "properties": {
+            "authType": {
+              "enum": [
+                "none",
+                "apikey",
+                "oauth2",
+                "other"
+              ]
+            },
+            "docs": {
+              "$ref": "#/$defs/iri"
+            }
+          }
+        },
+        "tier": {
+          "enum": [
+            "base",
+            "semantic",
+            "generative"
+          ]
+        },
+        "probe": {
+          "description": "Liveness-probe hint (v0.x, L0.8): the minimal harmless call proving the interface is alive. kind: sparql-ask | http-get | http-head | mcp-initialize | mcp-discover; expect: ok (2xx) | boolean (SPARQL ASK document) | response (any HTTP answer, bot walls included); target: optional probe URL when it differs from the endpoint.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "expect"
+          ],
+          "properties": {
+            "kind": {
+              "enum": [
+                "sparql-ask",
+                "http-get",
+                "http-head",
+                "mcp-initialize",
+                "mcp-discover"
+              ]
+            },
+            "expect": {
+              "enum": [
+                "ok",
+                "boolean",
+                "response"
+              ]
+            },
+            "target": {
+              "$ref": "#/$defs/iri"
+            }
+          }
+        }
+      }
+    }
+  },
+  "$comment": "PRE-PUBLICATION AMENDMENT (2026-08-20): the optional interfaces[].probe object was added in place while nothing external consumed this schema; immutability binds from first publication (standard README note). PRE-PUBLICATION AMENDMENT (2026-08-23): the probe kind `mcp-discover` joined the enum on the same terms. Grounds: the E09 wire suite established that the pinned MCP revision has no `initialize` method, so `mcp-initialize` cannot prove liveness on a stateless-era endpoint \u2014 the missing piece was vocabulary, not checker code. PRE-PUBLICATION AMENDMENT (2026-08-26): every ld.openhelvetia.org identifier was reminted to ld.openhelvetia.swiss in place, while nothing external consumes this artifact; immutability binds from first publication (standard README note, VERSIONING.md). Grounds: the sealed E03 Revisions-Nachtrag of 24.08.2026 makes openhelvetia.swiss the SINGLE public entry and ld.openhelvetia.swiss the home of the permanent identifiers \u2014 the remint is legal precisely because every affected artifact is still draft, and it must complete BEFORE publication."
+}

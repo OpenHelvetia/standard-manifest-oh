@@ -1,0 +1,91 @@
+{
+  "$comment": "PRE-PUBLICATION AMENDMENT (2026-08-20): the probe terms (probe/kind/expect/target) were added in place while NOTHING external consumed v1; the immutability rule binds from first publication (see the standard README, dated note). PRE-PUBLICATION AMENDMENT (2026-08-26): every ld.openhelvetia.org identifier was reminted to ld.openhelvetia.swiss in place, while nothing external consumes this artifact; immutability binds from first publication (standard README note, VERSIONING.md). Grounds: the sealed E03 Revisions-Nachtrag of 24.08.2026 makes openhelvetia.swiss the SINGLE public entry and ld.openhelvetia.swiss the home of the permanent identifiers \u2014 the remint is legal precisely because every affected artifact is still draft, and it must complete BEFORE publication.",
+  "@context": {
+    "@version": 1.1,
+    "@protected": true,
+    "oh": "https://ld.openhelvetia.swiss/schema/",
+    "dcat": "http://www.w3.org/ns/dcat#",
+    "dct": "http://purl.org/dc/terms/",
+    "skos": "http://www.w3.org/2004/02/skos/core#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "Manifest": "oh:Manifest",
+    "Organization": "oh:Organization",
+    "McpInterface": "oh:McpInterface",
+    "SparqlInterface": "oh:SparqlInterface",
+    "RestInterface": "oh:RestInterface",
+    "DownloadInterface": "oh:DownloadInterface",
+    "title": {
+      "@id": "dct:title",
+      "@container": "@language"
+    },
+    "description": {
+      "@id": "dct:description",
+      "@container": "@language"
+    },
+    "keyword": {
+      "@id": "dcat:keyword",
+      "@container": [
+        "@language",
+        "@set"
+      ]
+    },
+    "publisher": {
+      "@id": "dct:publisher",
+      "@type": "@id"
+    },
+    "license": {
+      "@id": "dct:license",
+      "@type": "@id"
+    },
+    "landingPage": {
+      "@id": "dcat:landingPage",
+      "@type": "@id"
+    },
+    "legalBasis": {
+      "@id": "oh:legalBasis",
+      "@type": "@id"
+    },
+    "conformsTo": {
+      "@id": "dct:conformsTo",
+      "@type": "@id"
+    },
+    "exactMatch": {
+      "@id": "skos:exactMatch",
+      "@type": "@id"
+    },
+    "interfaces": {
+      "@id": "oh:interface",
+      "@container": "@set"
+    },
+    "endpoint": {
+      "@id": "dcat:endpointURL",
+      "@type": "@id"
+    },
+    "docs": {
+      "@id": "oh:documentation",
+      "@type": "@id"
+    },
+    "auth": {
+      "@id": "oh:auth"
+    },
+    "authType": "oh:authType",
+    "tier": "oh:tier",
+    "issued": {
+      "@id": "dct:issued",
+      "@type": "xsd:date"
+    },
+    "modified": {
+      "@id": "dct:modified",
+      "@type": "xsd:date"
+    },
+    "probe": {
+      "@id": "oh:probe"
+    },
+    "kind": "oh:probeKind",
+    "expect": "oh:probeExpect",
+    "target": {
+      "@id": "oh:probeTarget",
+      "@type": "@id"
+    }
+  }
+}

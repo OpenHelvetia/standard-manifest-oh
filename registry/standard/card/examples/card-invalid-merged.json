@@ -1,0 +1,46 @@
+{
+  "$schema": "https://ld.openhelvetia.swiss/ns/card/0.1/schema",
+  "card": {
+    "protocolVersion": "1.0",
+    "name": "Musterwil municipal services agent",
+    "description": "DELIBERATELY INVALID VECTOR — the operator signature and the Verein verification are merged into one 'authenticity' block. This is exactly the shape E09 no. 5 forbids ('Zwei Felder, nie eines'); the schema must reject it via additionalProperties: false, and the conformance suite proves it keeps doing so.",
+    "url": "https://agent.musterwil.example/a2a",
+    "preferredTransport": "JSONRPC",
+    "version": "1.2.0",
+    "capabilities": {
+      "streaming": false
+    },
+    "defaultInputModes": ["text/plain"],
+    "defaultOutputModes": ["text/plain"],
+    "skills": [
+      {
+        "id": "office-hours",
+        "name": "Office hours lookup",
+        "description": "Returns opening hours for municipal offices.",
+        "tags": ["municipal", "opening-hours"]
+      }
+    ]
+  },
+  "authenticity": {
+    "signature": {
+      "protected": "eyJhbGciOiJFUzI1NiIsImtpZCI6Im11c3RlcndpbC0yMDI2LTAxIn0",
+      "signature": "c3RydWN0dXJhbC10ZXN0LXZlY3Rvci0tb3BlcmF0b3Itc2lnbmF0dXJlLWJ5dGVzLW5vdC1jcnlwdG9ncmFwaGljYWxseS12YWxpZA"
+    },
+    "keyRef": {
+      "jwksUri": "https://musterwil.example/.well-known/jwks.json",
+      "kid": "musterwil-2026-01"
+    },
+    "signedAt": "2026-08-18T09:30:00Z",
+    "level": "identity-verified",
+    "verifiedAt": "2026-08-19T10:00:00Z",
+    "expiresAt": "2027-08-19T10:00:00Z",
+    "attestorKeyRef": {
+      "jwksUri": "https://openhelvetia.swiss/.well-known/jwks.json",
+      "kid": "oh-attestor-2026-01"
+    },
+    "attestorSignature": {
+      "protected": "eyJhbGciOiJFZERTQSIsImtpZCI6Im9oLWF0dGVzdG9yLTIwMjYtMDEifQ",
+      "signature": "c3RydWN0dXJhbC10ZXN0LXZlY3Rvci0tYXR0ZXN0b3Itc2lnbmF0dXJlLWJ5dGVzLW5vdC1jcnlwdG9ncmFwaGljYWxseS12YWxpZA"
+    }
+  }
+}

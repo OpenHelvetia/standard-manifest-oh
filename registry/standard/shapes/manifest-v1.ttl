@@ -1,0 +1,199 @@
+# PRE-PUBLICATION AMENDMENT (2026-08-26): every ld.openhelvetia.org
+# identifier was reminted to ld.openhelvetia.swiss in place, while
+# nothing external consumes this artifact; immutability binds from
+# first publication (standard README note, VERSIONING.md). Grounds:
+# the sealed E03 Revisions-Nachtrag of 24.08.2026 makes
+# openhelvetia.swiss the SINGLE public entry and ld.openhelvetia.swiss
+# the home of the permanent identifiers — the remint is legal
+# precisely because every affected artifact is still draft, and it
+# must complete BEFORE publication.
+# PRE-PUBLICATION AMENDMENT (2026-08-23): the oh:probeKind sh:in list
+# gained "mcp-discover" in place, while nothing external consumes these
+# shapes; immutability binds from first publication (standard README
+# note, VERSIONING.md).
+# OpenHelvetia manifest shapes v1 — stage 3 of the validation chain
+# (E16 Ziff. 5c). These shapes validate the EXPANDED RDF graph of a
+# manifest; they complement (not replace) the JSON Schema of stage 1:
+# stage 1 guards the one canonical JSON shape, stage 3 guards the
+# graph semantics — closed node shapes are the RDF counterpart of
+# `additionalProperties: false`.
+#
+# DCAT-AP-CH alignment: property IRIs are the DCAT/DCT terms the
+# context maps to; own constraints live under the oh: interface model.
+# Every constraint here is covered by the conformance suite
+# (oh-validate tests/stage3.rs) — rudof's own test coverage is
+# unpublished, so the suite proves each constraint actually fires
+# (E16 mandate).
+
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix oh:   <https://ld.openhelvetia.swiss/schema/> .
+@prefix dct:  <http://purl.org/dc/terms/> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix ohsh: <https://ld.openhelvetia.swiss/shapes/manifest/v1#> .
+
+ohsh:ManifestShape
+  a sh:NodeShape ;
+  sh:targetClass oh:Manifest ;
+  # The manifest itself is an absolute HTTPS IRI (registry identity).
+  sh:nodeKind sh:IRI ;
+  sh:pattern "^https://" ;
+  # Closed world: every property must be one of the modelled ones —
+  # the graph counterpart of the schema's additionalProperties: false.
+  sh:closed true ;
+  sh:ignoredProperties ( rdf:type ) ;
+  sh:property [
+    sh:path dct:title ;
+    sh:minCount 1 ;
+    sh:datatype rdf:langString ;
+    sh:languageIn ( "de" "fr" "it" "rm" "en" ) ;
+    sh:uniqueLang true ;
+  ] ;
+  sh:property [
+    sh:path dct:description ;
+    sh:datatype rdf:langString ;
+    sh:languageIn ( "de" "fr" "it" "rm" "en" ) ;
+    sh:uniqueLang true ;
+  ] ;
+  sh:property [
+    sh:path dcat:keyword ;
+    sh:datatype rdf:langString ;
+    sh:languageIn ( "de" "fr" "it" "rm" "en" ) ;
+    # deliberately NO sh:uniqueLang — several keywords per language
+    # are the normal case (language-map arrays).
+  ] ;
+  sh:property [
+    sh:path dct:publisher ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:nodeKind sh:IRI ;
+  ] ;
+  sh:property [
+    sh:path dct:license ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:nodeKind sh:IRI ;
+  ] ;
+  sh:property [
+    sh:path dcat:landingPage ;
+    sh:maxCount 1 ;
+    sh:nodeKind sh:IRI ;
+  ] ;
+  sh:property [
+    sh:path oh:legalBasis ;
+    sh:maxCount 1 ;
+    sh:nodeKind sh:IRI ;
+  ] ;
+  sh:property [
+    sh:path dct:conformsTo ;
+    sh:nodeKind sh:IRI ;
+  ] ;
+  sh:property [
+    sh:path skos:exactMatch ;
+    sh:nodeKind sh:IRI ;
+  ] ;
+  sh:property [
+    sh:path oh:interface ;
+    sh:minCount 1 ;
+    # Frame invariant at graph level: interface nodes are blank nodes
+    # (mirrors the stage-2 structural guarantee).
+    sh:nodeKind sh:BlankNode ;
+    sh:node ohsh:InterfaceShape ;
+  ] ;
+  sh:property [
+    sh:path dct:issued ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:date ;
+  ] ;
+  sh:property [
+    sh:path dct:modified ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:date ;
+  ] .
+
+ohsh:InterfaceShape
+  a sh:NodeShape ;
+  sh:closed true ;
+  sh:ignoredProperties ( rdf:type ) ;
+  sh:property [
+    sh:path rdf:type ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:in ( oh:McpInterface oh:SparqlInterface oh:RestInterface oh:DownloadInterface ) ;
+  ] ;
+  sh:property [
+    sh:path dcat:endpointURL ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:nodeKind sh:IRI ;
+    sh:pattern "^https://" ;
+  ] ;
+  sh:property [
+    sh:path oh:documentation ;
+    sh:maxCount 1 ;
+    sh:nodeKind sh:IRI ;
+  ] ;
+  sh:property [
+    sh:path dct:conformsTo ;
+    sh:nodeKind sh:IRI ;
+  ] ;
+  sh:property [
+    sh:path oh:auth ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:nodeKind sh:BlankNode ;
+    sh:node ohsh:AuthShape ;
+  ] ;
+  sh:property [
+    sh:path oh:tier ;
+    sh:maxCount 1 ;
+    sh:in ( "base" "semantic" "generative" ) ;
+  ] ;
+  sh:property [
+    # Liveness-probe hint (v0.2 draft, L0.8 / DIRECTORY.md §3).
+    sh:path oh:probe ;
+    sh:maxCount 1 ;
+    sh:nodeKind sh:BlankNode ;
+    sh:node ohsh:ProbeShape ;
+  ] .
+
+ohsh:ProbeShape
+  a sh:NodeShape ;
+  sh:closed true ;
+  sh:ignoredProperties ( rdf:type ) ;
+  sh:property [
+    sh:path oh:probeKind ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:in ( "sparql-ask" "http-get" "http-head" "mcp-initialize" "mcp-discover" ) ;
+  ] ;
+  sh:property [
+    sh:path oh:probeExpect ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:in ( "ok" "boolean" "response" ) ;
+  ] ;
+  sh:property [
+    sh:path oh:probeTarget ;
+    sh:maxCount 1 ;
+    sh:nodeKind sh:IRI ;
+  ] .
+
+ohsh:AuthShape
+  a sh:NodeShape ;
+  sh:closed true ;
+  sh:ignoredProperties ( rdf:type ) ;
+  sh:property [
+    sh:path oh:authType ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:in ( "none" "apikey" "oauth2" "other" ) ;
+  ] ;
+  sh:property [
+    sh:path oh:documentation ;
+    sh:maxCount 1 ;
+    sh:nodeKind sh:IRI ;
+  ] .

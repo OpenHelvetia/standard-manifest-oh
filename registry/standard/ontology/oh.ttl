@@ -1,0 +1,524 @@
+# PRE-PUBLICATION AMENDMENT (2026-08-26): every ld.openhelvetia.org
+# identifier was reminted to ld.openhelvetia.swiss in place, while
+# nothing external consumes this artifact; immutability binds from
+# first publication (standard README note, VERSIONING.md). Grounds:
+# the sealed E03 Revisions-Nachtrag of 24.08.2026 makes
+# openhelvetia.swiss the SINGLE public entry and ld.openhelvetia.swiss
+# the home of the permanent identifiers — the remint is legal
+# precisely because every affected artifact is still draft, and it
+# must complete BEFORE publication.
+# PRE-PUBLICATION AMENDMENT (2026-08-23): the oh:ProbeKindValue set
+# gained 'mcp-discover' in place, while nothing external consumes this
+# ontology; immutability binds from first publication (standard README
+# note, VERSIONING.md). Grounds: the E09 wire suite established that
+# the pinned MCP revision has no initialize method, so 'mcp-initialize'
+# cannot prove liveness on a stateless-era endpoint.
+# OpenHelvetia platform ontology (oh:) — Turtle master, v0.1.
+#
+# This file is the single source of truth for the oh: vocabulary
+# (E16 no. 5e: full platform ontology; Turtle master in Git, generated
+# docs, owl:versionIRI + SemVer). oh.md is GENERATED from this file by
+# ontology/coverage — never edit oh.md by hand.
+#
+# Authoring subset (enforced by the coverage tool's parser, see
+# coverage/src/ttl.rs): @prefix directives, IRIs, prefixed names,
+# plain/language-tagged/typed literals ("..." and """..."""), the
+# tokens `a`, `true`, `false`, and the punctuation `;` `,` `.`.
+# NO blank nodes, NO collections, NO base directive. owl:oneOf value
+# lists are therefore deferred to 0.2; closed value sets are named
+# rdfs:Datatypes with machine-readable "Allowed value '<v>': ..."
+# skos:notes (the coverage gate checks them).
+#
+# Foreign terms (dcat:, dct:, prov:, cube:, eli:, org:, skos:) are
+# REFERENCED, never re-declared: no triple in this file has a foreign
+# term as its subject — alignments run FROM oh: terms TO the imported
+# vocabularies (E16 no. 5e: standards are imported, never duplicated).
+# The imported term subset is documented in imports/README.md and
+# mirrored machine-readably in the oh:importsTerm block below.
+#
+# dct: is used in addition to the core prefix set because the manifest
+# context maps title/description/publisher/license/issued/modified/
+# conformsTo directly to Dublin Core terms.
+
+@prefix oh:   <https://ld.openhelvetia.swiss/schema/> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix dct:  <http://purl.org/dc/terms/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix cube: <https://cube.link/> .
+@prefix eli:  <http://data.europa.eu/eli/ontology#> .
+@prefix org:  <http://www.w3.org/ns/org#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+##############################################################################
+# Ontology header
+##############################################################################
+
+<https://ld.openhelvetia.swiss/schema/>
+  a owl:Ontology ;
+  rdfs:label "OpenHelvetia platform ontology (oh:)"@en ;
+  owl:versionIRI <https://ld.openhelvetia.swiss/schema/0.1/> ;
+  owl:versionInfo "0.1.0" ;
+  rdfs:comment """Status: 0.x draft, not binding before ratification by the
+standards commission (Art. 13 statutes). The AI-interface module carried by
+this ontology (MCP/A2A interface descriptors) is the FOURTH commission
+candidate (E16 consequence 3), alongside the skill format (E8), portable
+agent memory (E7) and the engine standard (E15).
+
+Deprecation policy (E16 no. 5e — deprecation only with a transition period):
+terms are NEVER removed from this file. A deprecated term keeps its IRI and
+its declaration, receives owl:deprecated true plus a skos:note naming the
+replacement term and the transition period during which both terms remain
+served. Published versions are immutable; every change is a new
+owl:versionIRI (SemVer in owl:versionInfo)."""@en ;
+  oh:importsTerm
+    dct:title , dct:description , dct:publisher , dct:license ,
+    dct:issued , dct:modified , dct:conformsTo , dct:isVersionOf ,
+    dcat:keyword , dcat:landingPage , dcat:endpointURL ,
+    dcat:Dataset , dcat:DataService , dcat:Catalog , dcat:CatalogRecord ,
+    dcat:record , dcat:servesDataset , dcat:endpointDescription ,
+    skos:exactMatch , skos:note ,
+    prov:Entity , prov:Agent , prov:Attribution , prov:qualifiedAttribution ,
+    prov:wasAttributedTo , prov:Activity , prov:wasAssociatedWith ,
+    prov:actedOnBehalfOf ,
+    org:Organization , org:ChangeEvent , org:changedBy , org:resultedFrom ,
+    eli:LegalResource ,
+    cube:Cube , cube:Observation .
+
+##############################################################################
+# Core classes — manifest and interfaces
+##############################################################################
+
+oh:Manifest
+  a owl:Class ;
+  rdfs:subClassOf dcat:Dataset ;
+  rdfs:label "Manifest"@en ;
+  rdfs:comment """A registry manifest: the versioned, canonical description of
+ONE holding together with its access services (Registry-as-Code, manifest
+standard v0.1). Subclass of dcat:Dataset because the manifest's subject is
+the holding itself — the stable dataset being described — while each entry
+of oh:interface is a dcat:DataService serving that dataset. This keeps the
+profile a strict DCAT-AP-CH refinement: dataset-level tooling (opendata.swiss
+harvesting, LINDAS) reads the manifest unchanged, and the service level is
+carried in addition (E16 consequence 4: harvesting currently drops
+dcat:DataService — it lives on in this profile)."""@en .
+
+oh:Interface
+  a owl:Class ;
+  rdfs:subClassOf dcat:DataService ;
+  rdfs:label "Interface"@en ;
+  rdfs:comment """Common superclass of the four AI-interface classes
+(McpInterface, SparqlInterface, RestInterface, DownloadInterface). Subclass
+of dcat:DataService: every interface is an addressable service with an
+endpoint that serves the manifest's holding (DCAT direction:
+dcat:servesDataset from service to dataset; oh:interface is the profile's
+dataset-to-service arrangement, see there)."""@en .
+
+oh:McpInterface
+  a owl:Class ;
+  rdfs:subClassOf oh:Interface ;
+  rdfs:label "MCP interface"@en ;
+  rdfs:comment "An MCP server offered for the holding; the MCP spec version is carried in dct:conformsTo (manifest standard v0.1)."@en .
+
+oh:SparqlInterface
+  a owl:Class ;
+  rdfs:subClassOf oh:Interface ;
+  rdfs:label "SPARQL interface"@en ;
+  rdfs:comment "A SPARQL endpoint over the holding."@en .
+
+oh:RestInterface
+  a owl:Class ;
+  rdfs:subClassOf oh:Interface ;
+  rdfs:label "REST interface"@en ;
+  rdfs:comment "A REST API over the holding; the OpenAPI reference is carried in oh:documentation."@en .
+
+oh:DownloadInterface
+  a owl:Class ;
+  rdfs:subClassOf oh:Interface ;
+  rdfs:label "Download interface"@en ;
+  rdfs:comment "Dumps/distributions of the holding. Modelled as a service (access point with an endpoint), not as dcat:Distribution: the manifest names the place to fetch from, cf. dcat:accessService."@en .
+
+oh:AuthPolicy
+  a owl:Class ;
+  rdfs:label "Auth policy"@en ;
+  rdfs:comment "The declared authentication requirement of an interface (the manifest's auth block): an oh:authType value plus optional oh:documentation."@en .
+
+oh:Probe
+  a owl:Class ;
+  rdfs:label "Probe"@en ;
+  rdfs:comment "Liveness-probe hint (L0.8 cold-start hardening): the minimal harmless call proving an interface is alive, so a cold-start agent never has to guess a safe request. Carries oh:probeKind, oh:probeExpect and optionally oh:probeTarget."@en .
+
+##############################################################################
+# Organisations, registry entries, versions, events (URI model, L0.2)
+##############################################################################
+
+oh:Organization
+  a owl:Class ;
+  rdfs:subClassOf org:Organization ;
+  rdfs:label "Organization"@en ;
+  rdfs:comment """A publishing organisation with a timeless identity URI
+(/org/{id}; the stable internal ID is separate from the display slug, E14).
+Municipalities and other federal entities are never maintained twice:
+skos:exactMatch links to their ld.admin.ch URIs; oh: adds only what the
+platform itself asserts."""@en .
+
+oh:OrganizationVersion
+  a owl:Class ;
+  rdfs:label "Organization version"@en ;
+  rdfs:comment "A citable, immutable version of an organisation description (/org/{id}/version/{n}; version.link/JOLux time model, E16 no. 5b). Linked to its timeless identity via oh:versionOf."@en ;
+  rdfs:seeAlso oh:Organization , oh:versionOf .
+
+oh:Directory
+  a owl:Class ;
+  rdfs:subClassOf dcat:Catalog ;
+  rdfs:label "Directory"@en ;
+  rdfs:comment "The published directory index (directory envelope v0.2): a catalog of registry entries. The directory is DERIVED data — on any divergence the manifest governs (oh:authority)."@en .
+
+oh:RegistryEntry
+  a owl:Class ;
+  rdfs:subClassOf dcat:CatalogRecord ;
+  rdfs:label "Registry entry"@en ;
+  rdfs:comment """A directory entry with a timeless identity URI
+(/registry/{slug}). Subclass of dcat:CatalogRecord: the entry is the
+catalog's registration record ABOUT a manifest (its projections name,
+description, publisher, license mirror manifest fields), not the described
+resource itself — oh:manifest links to the authoritative manifest."""@en .
+
+oh:RegistryEntryVersion
+  a owl:Class ;
+  rdfs:label "Registry entry version"@en ;
+  rdfs:comment "A citable, immutable version of a registry entry (/registry/{slug}/version/{semver}), derived from git tags of the registry repo — the tag IS the version event (Registry-as-Code). Linked to its timeless identity via oh:versionOf."@en ;
+  rdfs:seeAlso oh:RegistryEntry , oh:versionOf .
+
+oh:ChangeEvent
+  a owl:Class ;
+  rdfs:subClassOf org:ChangeEvent ;
+  rdfs:label "Change event"@en ;
+  rdfs:comment """A change event with its own URI (/org/{id}/event/{id}):
+municipal mergers and registry history are modelled identically (E16
+no. 5b). Subclass of org:ChangeEvent so standard W3C-org tooling reads
+platform history unchanged; the E14 anchor-renewal rule (predecessor/
+successor relation, orderly relay hand-over of dying domains) hangs off
+these events via org:changedBy / org:resultedFrom."""@en ;
+  rdfs:seeAlso oh:Organization , oh:RegistryEntry .
+
+##############################################################################
+# Agent-card envelope (L0.7, E09): authenticity vs. attestation
+##############################################################################
+
+oh:AgentCardEnvelope
+  a owl:Class ;
+  rdfs:subClassOf prov:Entity ;
+  rdfs:label "Agent-card envelope"@en ;
+  rdfs:comment "The registry's exchange and record format for an A2A 1.0 agent card (card spec v0.1): it embeds the card (oh:card) and carries the two separated trust blocks (oh:authenticity, oh:attestation). A prov:Entity because it is the thing the two attributions qualify."@en .
+
+oh:Authenticity
+  a owl:Class ;
+  rdfs:subClassOf prov:Attribution ;
+  owl:disjointWith oh:Attestation ;
+  rdfs:label "Authenticity"@en ;
+  rdfs:comment """Operator signature block: whoever controls the
+domain-anchored key signed exactly this card — content integrity and key
+continuity, never legal entity (E09 no. 3). Subclass of prov:Attribution:
+it is the qualified ascription of the card to the OPERATOR agent, carrying
+the signature evidence (oh:signature, oh:keyRef, oh:signedAt). Disjoint
+with oh:Attestation — two fields, never one (E09 no. 5): different
+signers, different claims, different lifecycles, different revocation
+surfaces."""@en .
+
+oh:Attestation
+  a owl:Class ;
+  rdfs:subClassOf prov:Attribution ;
+  rdfs:label "Attestation"@en ;
+  rdfs:comment """Verein verification block: the association verified the
+operator out of band, at a stated level, at a stated time, with a stated
+expiry. Subclass of prov:Attribution: the qualified ascription of the
+verification claim to the VEREIN agent, bound to the exact card verified
+(JCS-bound signing input, card spec v0.1). Expiry moves an entry along the
+lifecycle gradient (grace, quarantine) — it never delists."""@en .
+
+oh:DetachedJws
+  a owl:Class ;
+  rdfs:label "Detached JWS"@en ;
+  rdfs:comment "A detached JWS (RFC 7515): protected header and signature only; the payload is reconstructed by the verifier via JCS (RFC 8785) from the content actually received. Carries oh:jwsProtected and oh:jwsSignature."@en .
+
+oh:KeyRef
+  a owl:Class ;
+  rdfs:label "Key reference"@en ;
+  rdfs:comment "Key discovery reference (E09 no. 1 — DNS+TLS anchor): a JWK Set under the signing organisation's own domain well-known (oh:jwksUri) plus the key id within it (oh:kid)."@en .
+
+##############################################################################
+# Object properties
+##############################################################################
+
+oh:interface
+  a owl:ObjectProperty ;
+  rdfs:range oh:Interface ;
+  rdfs:label "interface"@en ;
+  rdfs:comment "Relates a described holding (oh:Manifest) or a directory projection (oh:RegistryEntry) to one of its typed access services. Profile arrangement of the DCAT service link — DCAT itself points from service to dataset via dcat:servesDataset; no inverse axiom is asserted because not every serving service is a declared interface."@en ;
+  rdfs:seeAlso dcat:servesDataset .
+
+oh:auth
+  a owl:ObjectProperty ;
+  rdfs:domain oh:Interface ;
+  rdfs:range oh:AuthPolicy ;
+  rdfs:label "auth"@en ;
+  rdfs:comment "The interface's declared authentication requirement (mandatory per interface, manifest standard v0.1)."@en .
+
+oh:probe
+  a owl:ObjectProperty ;
+  rdfs:domain oh:Interface ;
+  rdfs:range oh:Probe ;
+  rdfs:label "probe"@en ;
+  rdfs:comment "The interface's liveness-probe hint (optional; L0.8)."@en .
+
+oh:probeTarget
+  a owl:ObjectProperty ;
+  rdfs:domain oh:Probe ;
+  rdfs:label "probe target"@en ;
+  rdfs:comment "Optional probe URL when it differs from the interface endpoint."@en .
+
+oh:documentation
+  a owl:ObjectProperty ;
+  rdfs:label "documentation"@en ;
+  rdfs:comment "Human- or machine-readable documentation for the subject (interface docs, auth docs, entry docs). Kept as one deliberately broad property; relates to dcat:endpointDescription (service docs) and dcat:landingPage (dataset page) without committing to either domain."@en ;
+  rdfs:seeAlso dcat:endpointDescription , dcat:landingPage .
+
+oh:legalBasis
+  a owl:ObjectProperty ;
+  rdfs:range eli:LegalResource ;
+  rdfs:label "legal basis"@en ;
+  rdfs:comment "The statutory basis of the holding, pointing to the legislation as an ELI legal resource (Fedlex URIs); analogue of DCAT-AP's applicable-legislation property, expressed against ELI directly."@en .
+
+oh:entry
+  a owl:ObjectProperty ;
+  rdfs:subPropertyOf dcat:record ;
+  rdfs:domain oh:Directory ;
+  rdfs:range oh:RegistryEntry ;
+  rdfs:label "entry"@en ;
+  rdfs:comment "Relates the directory to one of its registry entries; subproperty of dcat:record (catalog to catalog record)."@en .
+
+oh:manifest
+  a owl:ObjectProperty ;
+  rdfs:domain oh:RegistryEntry ;
+  rdfs:range oh:Manifest ;
+  rdfs:label "manifest"@en ;
+  rdfs:comment "Links a registry entry to its authoritative manifest (byte-identical sibling, directory envelope v0.2). Authority rule: on any divergence between entry projections and the manifest, the manifest governs."@en .
+
+oh:card
+  a owl:ObjectProperty ;
+  rdfs:domain oh:AgentCardEnvelope ;
+  rdfs:label "card"@en ;
+  rdfs:comment "The embedded A2A 1.0 agent card. Its interior is owned by A2A 1.0 and strictly validated against the A2A schema in a separate step (E16 no. 6) — this ontology deliberately declares no terms for the card's content and asserts no range (A2A publishes no RDF vocabulary to align to)."@en .
+
+oh:authenticity
+  a owl:ObjectProperty ;
+  rdfs:subPropertyOf prov:qualifiedAttribution ;
+  rdfs:domain oh:AgentCardEnvelope ;
+  rdfs:range oh:Authenticity ;
+  rdfs:label "authenticity"@en ;
+  rdfs:comment "The envelope's operator-signature block (mandatory). Subproperty of prov:qualifiedAttribution: it qualifies the envelope's attribution to the operator."@en .
+
+oh:attestation
+  a owl:ObjectProperty ;
+  rdfs:subPropertyOf prov:qualifiedAttribution ;
+  rdfs:domain oh:AgentCardEnvelope ;
+  rdfs:range oh:Attestation ;
+  rdfs:label "attestation"@en ;
+  rdfs:comment "The envelope's Verein-verification block (optional — 'signed but not yet verified' is a normal state). Subproperty of prov:qualifiedAttribution: it qualifies the envelope's attribution to the attesting Verein."@en .
+
+oh:signature
+  a owl:ObjectProperty ;
+  rdfs:range oh:DetachedJws ;
+  rdfs:label "signature"@en ;
+  rdfs:comment "The detached JWS of a trust block (authenticity or attestation); signing inputs are JCS-canonical (card spec v0.1, normative)."@en .
+
+oh:keyRef
+  a owl:ObjectProperty ;
+  rdfs:range oh:KeyRef ;
+  rdfs:label "key reference"@en ;
+  rdfs:comment "The key discovery reference of a trust block."@en .
+
+oh:versionOf
+  a owl:ObjectProperty ;
+  rdfs:subPropertyOf dct:isVersionOf ;
+  rdfs:label "version of"@en ;
+  rdfs:comment "Links a citable, immutable version resource to its timeless identity (version.link/JOLux pattern, E16 no. 5b); subproperty of dct:isVersionOf."@en ;
+  rdfs:seeAlso oh:RegistryEntryVersion , oh:OrganizationVersion .
+
+##############################################################################
+# Datatype properties
+##############################################################################
+
+oh:authType
+  a owl:DatatypeProperty ;
+  rdfs:domain oh:AuthPolicy ;
+  rdfs:range oh:AuthTypeValue ;
+  rdfs:label "auth type"@en ;
+  rdfs:comment "The kind of authentication an interface requires; one of the closed oh:AuthTypeValue set."@en .
+
+oh:tier
+  a owl:DatatypeProperty ;
+  rdfs:domain oh:Interface ;
+  rdfs:range oh:TierValue ;
+  rdfs:label "tier"@en ;
+  rdfs:comment "The interface's service tier (Stufen-Prinzip, VISION §4); one of the closed oh:TierValue set."@en .
+
+oh:probeKind
+  a owl:DatatypeProperty ;
+  rdfs:domain oh:Probe ;
+  rdfs:range oh:ProbeKindValue ;
+  rdfs:label "probe kind"@en ;
+  rdfs:comment "The kind of liveness probe to send; one of the closed oh:ProbeKindValue set."@en .
+
+oh:probeExpect
+  a owl:DatatypeProperty ;
+  rdfs:domain oh:Probe ;
+  rdfs:range oh:ProbeExpectValue ;
+  rdfs:label "probe expectation"@en ;
+  rdfs:comment "What answer proves liveness; one of the closed oh:ProbeExpectValue set."@en .
+
+oh:slug
+  a owl:DatatypeProperty ;
+  rdfs:domain oh:RegistryEntry ;
+  rdfs:range xsd:string ;
+  rdfs:label "slug"@en ;
+  rdfs:comment "The entry's display slug (lowercase, hyphenated). Display only: the stable internal organisation ID is a separate identifier (E14) — slugs may change, identity URIs never do."@en .
+
+oh:schemaVersion
+  a owl:DatatypeProperty ;
+  rdfs:range xsd:string ;
+  rdfs:label "schema version"@en ;
+  rdfs:comment "The format version of a published envelope document (the directory envelope's 'version' field). Named oh:schemaVersion, not oh:version, to keep it unmistakably apart from owl:versionInfo and from entry/organisation version resources (oh:versionOf)."@en .
+
+oh:authority
+  a owl:DatatypeProperty ;
+  rdfs:domain oh:Directory ;
+  rdfs:range xsd:string ;
+  rdfs:label "authority"@en ;
+  rdfs:comment "Machine-readable divergence rule of the directory envelope: names the artefact class that governs when derived data and source disagree."@en ;
+  skos:note "Allowed value 'manifest': the manifest is the authoritative source; the directory index is derived from it (directory envelope v0.2)."@en .
+
+oh:attestationLevel
+  a owl:DatatypeProperty ;
+  rdfs:domain oh:Attestation ;
+  rdfs:range oh:AttestationLevelValue ;
+  rdfs:label "attestation level"@en ;
+  rdfs:comment "The verification level of an attestation (a gradient, never a binary badge — E14(b)); one of the closed oh:AttestationLevelValue set. Ontology name for the card envelope's 'level' field."@en .
+
+oh:signedAt
+  a owl:DatatypeProperty ;
+  rdfs:domain oh:Authenticity ;
+  rdfs:range xsd:dateTime ;
+  rdfs:label "signed at"@en ;
+  rdfs:comment "Operator-declared signing time (RFC 3339, UTC). A newly signed card is a re-verification event (E09 no. 2)."@en .
+
+oh:verifiedAt
+  a owl:DatatypeProperty ;
+  rdfs:domain oh:Attestation ;
+  rdfs:range xsd:dateTime ;
+  rdfs:label "verified at"@en ;
+  rdfs:comment "Time of the Verein's out-of-band verification act (RFC 3339, UTC)."@en .
+
+oh:expiresAt
+  a owl:DatatypeProperty ;
+  rdfs:domain oh:Attestation ;
+  rdfs:range xsd:dateTime ;
+  rdfs:label "expires at"@en ;
+  rdfs:comment "Expiry of the attestation (RFC 3339, UTC). Expiry moves the entry along the lifecycle gradient (grace, then quarantine) — it never delists."@en .
+
+oh:jwsProtected
+  a owl:DatatypeProperty ;
+  rdfs:domain oh:DetachedJws ;
+  rdfs:range xsd:string ;
+  rdfs:label "JWS protected header"@en ;
+  rdfs:comment "The base64url-encoded JWS protected header (RFC 7515); must contain 'alg' and 'kid'. Ontology name for the detached-JWS 'protected' field."@en .
+
+oh:jwsSignature
+  a owl:DatatypeProperty ;
+  rdfs:domain oh:DetachedJws ;
+  rdfs:range xsd:string ;
+  rdfs:label "JWS signature"@en ;
+  rdfs:comment "The base64url-encoded JWS signature value (RFC 7515). Ontology name for the detached-JWS 'signature' field (distinct from oh:signature, which links a trust block to its detached JWS)."@en .
+
+oh:jwksUri
+  a owl:DatatypeProperty ;
+  rdfs:domain oh:KeyRef ;
+  rdfs:range xsd:anyURI ;
+  rdfs:label "JWKS URI"@en ;
+  rdfs:comment "HTTPS URL of the JWK Set on the signing organisation's own domain (DNS+TLS anchor, E09 no. 1)."@en .
+
+oh:kid
+  a owl:DatatypeProperty ;
+  rdfs:domain oh:KeyRef ;
+  rdfs:range xsd:string ;
+  rdfs:label "key id"@en ;
+  rdfs:comment "Key id selecting the key within the JWK Set; the JWS protected header's 'kid' must equal it."@en .
+
+##############################################################################
+# Closed value sets (named datatypes)
+#
+# Modelling call, justified: in the published JSON these fields carry plain
+# string literals (the context coerces none of them to @id), so a SKOS
+# concept scheme would make every existing manifest semantically wrong —
+# literals cannot be skos:Concepts. Each value set is therefore a NAMED
+# rdfs:Datatype (E16 no. 5e: every state form has a formal name) whose
+# closure is documented in machine-readable "Allowed value '<v>': ..."
+# skos:notes; the coverage gate checks every schema enum value against
+# them. Formal owl:oneOf literal lists follow in 0.2 (the authoring subset
+# above excludes collections in 0.1).
+##############################################################################
+
+oh:AuthTypeValue
+  a rdfs:Datatype ;
+  rdfs:label "auth type value"@en ;
+  rdfs:comment "Closed value set of oh:authType (manifest standard v0.1)."@en ;
+  skos:note "Allowed value 'none': no authentication required."@en ;
+  skos:note "Allowed value 'apikey': a static API key is required."@en ;
+  skos:note "Allowed value 'oauth2': an OAuth 2.0 flow is required."@en ;
+  skos:note "Allowed value 'other': another mechanism, described in the auth block's oh:documentation."@en .
+
+oh:TierValue
+  a rdfs:Datatype ;
+  rdfs:label "tier value"@en ;
+  rdfs:comment "Closed value set of oh:tier (Stufen-Prinzip, VISION §4)."@en ;
+  skos:note "Allowed value 'base': stateless/cheap base tier (published zero tariff, E16 no. 2)."@en ;
+  skos:note "Allowed value 'semantic': semantic tier."@en ;
+  skos:note "Allowed value 'generative': generative tier."@en .
+
+oh:ProbeKindValue
+  a rdfs:Datatype ;
+  rdfs:label "probe kind value"@en ;
+  rdfs:comment "Closed value set of oh:probeKind (L0.8)."@en ;
+  skos:note "Allowed value 'sparql-ask': send a SPARQL ASK query."@en ;
+  skos:note "Allowed value 'http-get': send an HTTP GET request."@en ;
+  skos:note "Allowed value 'http-head': send an HTTP HEAD request."@en ;
+  skos:note "Allowed value 'mcp-initialize': perform an MCP initialize handshake. Handshake-era servers only — the stateless revision has no initialize method."@en ;
+  skos:note "Allowed value 'mcp-discover': send server/discover as the first message, in the stateless per-request envelope."@en .
+
+oh:ProbeExpectValue
+  a rdfs:Datatype ;
+  rdfs:label "probe expectation value"@en ;
+  rdfs:comment "Closed value set of oh:probeExpect (L0.8)."@en ;
+  skos:note "Allowed value 'ok': a 2xx answer is required."@en ;
+  skos:note "Allowed value 'boolean': a SPARQL ASK result document is required."@en ;
+  skos:note "Allowed value 'response': any HTTP answer proves liveness (bot walls included)."@en .
+
+oh:AttestationLevelValue
+  a rdfs:Datatype ;
+  rdfs:label "attestation level value"@en ;
+  rdfs:comment "Closed value set of oh:attestationLevel (card spec v0.1; gradient per E14(b))."@en ;
+  skos:note "Allowed value 'countersigned': the Verein verified identity out of band and countersigns for an operator without own key management (E09 no. 4)."@en ;
+  skos:note "Allowed value 'identity-verified': the out-of-band key-to-legal-entity binding was checked."@en ;
+  skos:note "Allowed value 'deep-verified': additionally the credential-path deep check passed (E14(b)2)."@en .
+
+##############################################################################
+# Annotation properties
+##############################################################################
+
+oh:importsTerm
+  a owl:AnnotationProperty ;
+  rdfs:label "imports term"@en ;
+  rdfs:comment "Documentation-only registry of the foreign terms this ontology references (the machine-readable mirror of imports/README.md). Foreign terms are imported, never re-declared: they appear in this file only in object position (E16 no. 5e)."@en .

@@ -1,0 +1,145 @@
+{
+  "$comment": "PRE-PUBLICATION AMENDMENT (2026-08-26): every ld.openhelvetia.org identifier was reminted to ld.openhelvetia.swiss in place, while nothing external consumes this artifact; immutability binds from first publication (standard README note, VERSIONING.md). Grounds: the sealed E03 Revisions-Nachtrag of 24.08.2026 makes openhelvetia.swiss the SINGLE public entry and ld.openhelvetia.swiss the home of the permanent identifiers \u2014 the remint is legal precisely because every affected artifact is still draft, and it must complete BEFORE publication.",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ld.openhelvetia.swiss/ns/card/0.1/schema",
+  "title": "OpenHelvetia agent-card signature envelope v0.1",
+  "description": "Envelope carrying an A2A 1.0 agent card together with its two separated trust statements (E09 no. 5): 'authenticity' (the operator signed this card) and 'attestation' (the Verein verified the operator). The embedded card is additionally validated against the A2A 1.0 schema in a separate, mandatory step (E16 no. 6); this schema does not redefine A2A.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "card", "authenticity"],
+  "properties": {
+    "$schema": {
+      "description": "Head metadatum, manifest-standard convention: the dated, immutable schema URL of this envelope version.",
+      "const": "https://ld.openhelvetia.swiss/ns/card/0.1/schema"
+    },
+    "card": {
+      "$ref": "#/$defs/a2aCard"
+    },
+    "authenticity": {
+      "$ref": "#/$defs/authenticity"
+    },
+    "attestation": {
+      "$ref": "#/$defs/attestation"
+    }
+  },
+  "$defs": {
+    "a2aCard": {
+      "description": "The embedded A2A 1.0 agent card. Deliberately open (no additionalProperties constraint): its interior is defined by A2A 1.0, not by this spec, and strict A2A validation is a separate pipeline step. The properties below are a smoke check only. The 'signatures' member is forbidden here: inside the envelope the operator signature lives exclusively in 'authenticity'; the build step emits it into the served card's 'signatures' member.",
+      "type": "object",
+      "required": ["protocolVersion", "name", "url", "version"],
+      "properties": {
+        "protocolVersion": {
+          "description": "A2A protocol version the card conforms to.",
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "description": "Human-readable agent name (A2A).",
+          "type": "string",
+          "minLength": 1
+        },
+        "url": {
+          "description": "Preferred endpoint URL of the agent (A2A); HTTPS only.",
+          "type": "string",
+          "pattern": "^https://"
+        },
+        "version": {
+          "description": "Version of the card/agent (A2A).",
+          "type": "string",
+          "minLength": 1
+        },
+        "signatures": false
+      }
+    },
+    "authenticity": {
+      "description": "Operator signature block: proves that whoever controls the domain-anchored key signed exactly this card (content integrity and key continuity — not legal entity, E09 no. 3). JWS signing input is built from JCS(card), RFC 8785.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["signature", "keyRef", "signedAt"],
+      "properties": {
+        "signature": {
+          "$ref": "#/$defs/detachedJws"
+        },
+        "keyRef": {
+          "$ref": "#/$defs/keyRef"
+        },
+        "signedAt": {
+          "description": "Operator-declared signing time (RFC 3339). A newly signed card is a re-verification event (E09 no. 2).",
+          "$ref": "#/$defs/timestamp"
+        }
+      }
+    },
+    "attestation": {
+      "description": "Verein verification block: proves that the association verified the operator out of band, at a stated level, at a stated time, with a stated expiry. JWS signing input is built from JCS({card, attestation-without-signature}), binding the claims to the exact card verified.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["level", "verifiedAt", "expiresAt", "keyRef", "signature"],
+      "properties": {
+        "level": {
+          "description": "Verification level (gradient, never a binary badge — E14(b)). 'countersigned': the Verein verified identity out of band and countersigns for an operator without own key management (E09 no. 4). 'identity-verified': the out-of-band key-to-legal-entity binding was checked. 'deep-verified': additionally the credential-path deep check passed (E14(b)2).",
+          "enum": ["countersigned", "identity-verified", "deep-verified"]
+        },
+        "verifiedAt": {
+          "description": "Time of the verification act (RFC 3339).",
+          "$ref": "#/$defs/timestamp"
+        },
+        "expiresAt": {
+          "description": "Expiry of this attestation (RFC 3339). Expiry moves the entry along the lifecycle gradient (grace, then quarantine) — it never delists.",
+          "$ref": "#/$defs/timestamp"
+        },
+        "keyRef": {
+          "$ref": "#/$defs/keyRef"
+        },
+        "signature": {
+          "$ref": "#/$defs/detachedJws"
+        }
+      }
+    },
+    "detachedJws": {
+      "description": "Detached JWS: protected header and signature only; the payload is reconstructed by the verifier via JCS (RFC 8785) from the content it actually received. The protected header must contain 'alg' (ES256 or EdDSA; never 'none', never symmetric) and 'kid' equal to keyRef.kid — enforced by the verifier, not expressible here.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["protected", "signature"],
+      "properties": {
+        "protected": {
+          "description": "base64url-encoded JWS protected header (RFC 7515).",
+          "$ref": "#/$defs/base64url"
+        },
+        "signature": {
+          "description": "base64url-encoded JWS signature.",
+          "$ref": "#/$defs/base64url"
+        }
+      }
+    },
+    "keyRef": {
+      "description": "Key discovery reference: a JWK Set under the signing organisation's own domain well-known (DNS+TLS anchor, E09 no. 1) plus the key id within it.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["jwksUri", "kid"],
+      "properties": {
+        "jwksUri": {
+          "description": "HTTPS URL of the JWK Set on the organisation's domain (for OpenHelvetia-hosted organisations: the jwks_uri of /.well-known/openhelvetia.json, E16 no. 6).",
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://"
+        },
+        "kid": {
+          "description": "Key id selecting the key within the JWK Set.",
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "base64url": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]+$",
+      "minLength": 1
+    },
+    "timestamp": {
+      "description": "RFC 3339 timestamp, UTC ('Z') required. The pattern enforces the shape; 'format' is annotation-only in draft 2020-12.",
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?Z$"
+    }
+  }
+}

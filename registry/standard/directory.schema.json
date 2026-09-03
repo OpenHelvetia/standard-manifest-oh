@@ -1,0 +1,85 @@
+{
+  "$comment": "PRE-PUBLICATION AMENDMENT (2026-08-23): the probe kind `mcp-discover` was added in place while nothing external consumes this artifact; immutability binds from first publication (standard README note). Grounds: the E09 wire suite established that the pinned MCP revision has no `initialize` method, so `mcp-initialize` cannot prove liveness there \u2014 a probe kind for the stateless era was the missing vocabulary, not a defect in the checker. PRE-PUBLICATION AMENDMENT (2026-08-26): every ld.openhelvetia.org identifier was reminted to ld.openhelvetia.swiss in place, while nothing external consumes this artifact; immutability binds from first publication (standard README note, VERSIONING.md). Grounds: the sealed E03 Revisions-Nachtrag of 24.08.2026 makes openhelvetia.swiss the SINGLE public entry and ld.openhelvetia.swiss the home of the permanent identifiers \u2014 the remint is legal precisely because every affected artifact is still draft, and it must complete BEFORE publication.",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ld.openhelvetia.swiss/ns/directory/0.2/schema",
+  "title": "OpenHelvetia directory envelope",
+  "description": "Envelope for the published directory index (v0.2, L0.8 cold-start hardening). The directory is DERIVED data: on any divergence from a manifest, the manifest governs (authority rule). 0.x draft without stability promise until ratification by the standards commission.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "$schema", "authority", "entries"],
+  "properties": {
+    "version": { "const": "0.2" },
+    "$schema": { "const": "https://ld.openhelvetia.swiss/ns/directory/0.2/schema" },
+    "authority": {
+      "description": "Machine-readable divergence rule: the manifest is the authoritative source; the directory index is derived from it.",
+      "const": "manifest"
+    },
+    "entries": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/entry" }
+    }
+  },
+  "$defs": {
+    "languageMap": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": { "enum": ["de", "fr", "it", "rm", "en"] },
+      "additionalProperties": { "type": "string" }
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["slug", "name", "description", "publisher", "license", "interfaces", "manifest"],
+      "properties": {
+        "slug": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+        "name": { "$ref": "#/$defs/languageMap" },
+        "description": { "$ref": "#/$defs/languageMap" },
+        "publisher": { "type": "string", "format": "uri" },
+        "license": { "type": "string", "format": "uri" },
+        "manifest": {
+          "description": "Absolute URL of the byte-identical machine manifest (sibling principle).",
+          "type": "string",
+          "format": "uri"
+        },
+        "docs": { "type": "string", "format": "uri" },
+        "interfaces": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/interface" }
+        }
+      }
+    },
+    "interface": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "endpoint", "tier"],
+      "properties": {
+        "type": {
+          "enum": ["SparqlInterface", "RestInterface", "DownloadInterface", "McpInterface"]
+        },
+        "endpoint": { "type": "string", "format": "uri" },
+        "docs": { "type": "string", "format": "uri" },
+        "tier": { "enum": ["base", "semantic", "generative"] },
+        "probe": { "$ref": "#/$defs/probe" }
+      }
+    },
+    "probe": {
+      "description": "Liveness-probe hint (L0.8): the minimal harmless call that proves the interface is alive, so a cold-start agent never has to guess a safe request.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "expect"],
+      "properties": {
+        "kind": { "enum": ["sparql-ask", "http-get", "http-head", "mcp-initialize", "mcp-discover"] },
+        "expect": {
+          "description": "ok = 2xx required · boolean = SPARQL ASK result document · response = any HTTP answer proves liveness (bot walls included).",
+          "enum": ["ok", "boolean", "response"]
+        },
+        "target": {
+          "description": "Optional probe URL when it differs from the endpoint.",
+          "type": "string",
+          "format": "uri"
+        }
+      }
+    }
+  }
+}

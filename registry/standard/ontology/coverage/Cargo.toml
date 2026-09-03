@@ -1,0 +1,19 @@
+# Ontology coverage gate + doc generator for the oh: platform ontology
+# (E16 no. 5e: "Ontologie-Deckung als CI-Test"; masterplan L0.5).
+# Standalone on purpose: the empty [workspace] table keeps this crate out of
+# any parent workspace, so building it never touches sibling crates.
+[package]
+name = "oh-coverage"
+version = "0.1.0"
+edition = "2024"
+description = "Coverage gate and generated-doc drift check for the OpenHelvetia oh: ontology v0.1"
+publish = false
+
+[dependencies]
+serde_json = "1"
+
+[[bin]]
+name = "coverage"
+path = "src/main.rs"
+
+[workspace]

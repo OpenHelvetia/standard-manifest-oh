@@ -1,0 +1,42 @@
+{
+  "$schema": "https://ld.openhelvetia.swiss/ns/card/0.1/schema",
+  "card": {
+    "protocolVersion": "1.0",
+    "name": "Musterwil municipal services agent",
+    "description": "Answers questions about Musterwil municipal services, office hours and forms.",
+    "url": "https://agent.musterwil.example/a2a",
+    "preferredTransport": "JSONRPC",
+    "version": "1.2.0",
+    "capabilities": {
+      "streaming": false
+    },
+    "defaultInputModes": [
+      "text/plain"
+    ],
+    "defaultOutputModes": [
+      "text/plain"
+    ],
+    "skills": [
+      {
+        "id": "office-hours",
+        "name": "Office hours lookup",
+        "description": "Returns opening hours for municipal offices.",
+        "tags": [
+          "municipal",
+          "opening-hours"
+        ]
+      }
+    ]
+  },
+  "authenticity": {
+    "signature": {
+      "protected": "eyJhbGciOiJFZERTQSIsImtpZCI6Im11c3RlcndpbC0yMDI2LTAxIn0",
+      "signature": "nsaSJIEhQJPmzg0ZIUJF7Ltkq6q44IqD6vMheCe6pKgocZcptOEhVcY4rmmxFq9t9_A8uIFze4bQQnVe2g42Dw"
+    },
+    "keyRef": {
+      "jwksUri": "https://musterwil.example/.well-known/jwks.json",
+      "kid": "musterwil-2026-01"
+    },
+    "signedAt": "2026-08-18T09:30:00Z"
+  }
+}

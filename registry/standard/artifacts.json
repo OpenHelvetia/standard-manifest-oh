@@ -1,0 +1,100 @@
+{
+  "$comment": "Artifact seal register (L0.6). Closed world over the standard's published artifacts: every artifact file MUST have a row here, every row MUST match its file's SHA-256. status 'draft' = pre-publication (changes are legal, but the hash must be re-recorded via `oh-seal --update` in the SAME commit — the gate forces conscious change); status 'published' = byte-frozen (any change is a hard error: create a new version, never edit). Rules: VERSIONING.md.",
+  "locations": {
+    "dirs": [
+      {
+        "path": ".",
+        "extensions": [
+          "json"
+        ]
+      },
+      {
+        "path": "context",
+        "extensions": [
+          "jsonld"
+        ]
+      },
+      {
+        "path": "frame",
+        "extensions": [
+          "jsonld"
+        ]
+      },
+      {
+        "path": "schema",
+        "extensions": [
+          "json"
+        ]
+      },
+      {
+        "path": "shapes",
+        "extensions": [
+          "ttl"
+        ]
+      }
+    ],
+    "files": [
+      "card/agent-card.schema.json",
+      "ontology/oh.ttl",
+      "ontology/oh.md"
+    ]
+  },
+  "artifacts": [
+    {
+      "path": "context/v1.jsonld",
+      "iri": "https://ld.openhelvetia.swiss/ns/manifest/v1",
+      "status": "draft",
+      "sha256": "273b7ce53f15277b820c868178e09827572176c5b6cc8d65825eba84aac56a52",
+      "note": "JSON-LD context v1; immutable from first publication (Cache-Control: immutable). Pre-publication probe amendment recorded 2026-08-20 ($comment in file + standard README note)."
+    },
+    {
+      "path": "frame/v1.frame.jsonld",
+      "iri": null,
+      "status": "draft",
+      "sha256": "6efee5bc79b06d95ec59f375bbf29b7d444ebedea1cd0a7595b797fc45980a9e",
+      "note": "Internal round-trip frame; not served under /ns/ (json-ld crate lacks framing — structural invariant in the stage-2 gate)."
+    },
+    {
+      "path": "schema/manifest.schema.json",
+      "iri": "https://ld.openhelvetia.swiss/ns/manifest/schema/2026-08-15/manifest.schema.json",
+      "status": "draft",
+      "sha256": "981c4bcce60424ff20d8f8e2038aa94d05c6acc3e6d47e93dd1659374be45087",
+      "note": "Dated, immutable-from-publication schema URL (canonical form rule 1). Pre-publication probe amendment recorded 2026-08-20. SERVING GAP flagged 2026-08-20: site-gen emits only the undated path — dated-path emission rides on L0.2 serving. Pre-publication `mcp-discover` amendment recorded 2026-08-23 (amendment note in the file + standard README note)."
+    },
+    {
+      "path": "directory.schema.json",
+      "iri": "https://ld.openhelvetia.swiss/ns/directory/0.2/schema",
+      "status": "draft",
+      "sha256": "34d58ffe956b028f46e06638500ab04223687fc3e55db9b5fcd3ab3cec7bdd0d",
+      "note": "Directory envelope v0.2 (L0.8; authority rule: manifest governs). Pre-publication `mcp-discover` amendment recorded 2026-08-23 (amendment note in the file + standard README note)."
+    },
+    {
+      "path": "card/agent-card.schema.json",
+      "iri": "https://ld.openhelvetia.swiss/ns/card/0.1/schema",
+      "status": "draft",
+      "sha256": "3e817f8c9096032fa8548f9dc2ccb923bb95c4a887de276a49d01787737b2fba",
+      "note": "Agent-card envelope v0.1 (L0.7; two fields, never one — E9)."
+    },
+    {
+      "path": "shapes/manifest-v1.ttl",
+      "iri": null,
+      "status": "draft",
+      "sha256": "09363b75696928939bd5ff6f7d84eb68fe89d8efc9c39fe6ba356fe6b2f3ee6e",
+      "note": "SHACL shapes v1 (stage 3); publication surface undecided (validation-internal for now). Pre-publication `mcp-discover` amendment recorded 2026-08-23 (amendment note in the file + standard README note)."
+    },
+    {
+      "path": "ontology/oh.ttl",
+      "iri": "https://ld.openhelvetia.swiss/schema/",
+      "status": "draft",
+      "sha256": "37673427eebf74f4460c52be6184c209179c1567fb762b9ec36c046d57fdd5dc",
+      "note": "oh: ontology v0.1 Turtle master (L0.5); /ns/ publication rides on L0.2 serving; owl:versionIRI + SemVer inside the file. Pre-publication `mcp-discover` amendment recorded 2026-08-23 (amendment note in the file + standard README note)."
+    },
+    {
+      "path": "ontology/oh.md",
+      "iri": null,
+      "status": "draft",
+      "sha256": "0b10e356ff4701542a26d491706fe2c4a30a4c88dd71c1560918e3e1d9038a33",
+      "note": "GENERATED from oh.ttl (coverage --write-doc); the coverage gate proves regeneration equality, this row seals the bytes alongside the master. Pre-publication `mcp-discover` amendment recorded 2026-08-23 (amendment note in the file + standard README note)."
+    }
+  ]
+}

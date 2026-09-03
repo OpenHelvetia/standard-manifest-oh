@@ -1,0 +1,11 @@
+{
+  "keys": [
+    {
+      "kty": "EC",
+      "crv": "P-256",
+      "kid": "oh-attestor-2026-01",
+      "x": "XguIlVR4dS8gtSyG9892pqL2XjUCk7CbW8SK_hLvbYg",
+      "y": "iPzgvd2drC16UiyoRctAChG0FQKKH4PjbZcQS9NQXik"
+    }
+  ]
+}

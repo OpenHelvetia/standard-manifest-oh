@@ -1,0 +1,21 @@
+# Conformance suite for the OpenHelvetia agent-card signature envelope v0.1.
+# Standalone on purpose: the empty [workspace] table keeps this crate out of
+# any parent workspace, so building it never touches sibling crates.
+[package]
+name = "card-conformance"
+version = "0.1.0"
+edition = "2024"
+description = "Conformance tests for the OpenHelvetia agent-card signature envelope (spec v0.1)"
+publish = false
+
+[dependencies]
+serde_json = "1"
+
+# default-features off: drops the HTTP/file reference resolvers (reqwest,
+# rustls). The envelope schema is self-contained and the draft 2020-12
+# meta-schemas ship bundled, so validation never resolves anything remote —
+# the suite must not even link a network path.
+[dev-dependencies]
+jsonschema = { version = "0.49", default-features = false }
+
+[workspace]

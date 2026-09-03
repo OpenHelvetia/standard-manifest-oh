@@ -1,0 +1,7 @@
+{
+  "@context": "https://ld.openhelvetia.swiss/ns/manifest/v1",
+  "@type": "Manifest",
+  "interfaces": {
+    "@embed": "@always"
+  }
+}
