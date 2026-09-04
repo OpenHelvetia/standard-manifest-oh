@@ -1,6 +1,6 @@
 # standard-manifest-oh
 
-> **Kurz auf Deutsch.** Das ist der Manifest-Standard von OpenHelvetia: die Form, in der eine Datenquelle für KI-Systeme beschrieben wird — als JSON-Schema, JSON-LD-Kontext, SHACL-Formen und Ontologie —, dazu der Prüfer `oh-validate` mit vier Stufen, das Siegelregister und die Werkzeuge für signierte Agentenkarten. Version 0.1, Entwurf: verbindlich erst nach Ratifikation durch die Standardkommission des Vereins. Anleitung unten auf Englisch.
+> **Kurz auf Deutsch.** Das ist der Manifest-Standard von OpenHelvetia: die Form, in der eine Datenquelle für KI-Systeme beschrieben wird — als JSON-Schema, JSON-LD-Kontext, SHACL-Shapes und Ontologie —, dazu der Prüfer `oh-validate` mit vier Stufen, das Siegelregister und die Werkzeuge für signierte Agentenkarten. Version 0.1, Entwurf: verbindlich erst nach Ratifikation durch die Standardkommission des Vereins. Anleitung unten auf Englisch.
 
 **standard-manifest-oh** is the manifest standard of the association [OpenHelvetia](https://openhelvetia.swiss): how a data source is described so that an AI system can find, address and cite it. A manifest is one plain JSON document in exactly one normalised shape — a profile on DCAT-AP-CH with an extension for AI interfaces (the `oh:` vocabulary) — that is plain JSON for the person writing it and clean RDF for the machine reading it, thanks to the JSON-LD context.
 
@@ -130,11 +130,11 @@ The validator's own tests run every stage over entries, examples and test corpus
 
 The association develops all its modules in one corpus, on its own GitLab, where every change runs through a gate (formatting, Clippy without warnings, all tests, seal and drift checks). This repository is **assembled from that corpus** by the publication lane (`tools/publish-module.sh` there): it takes the crates and exactly the files their builds and tests need, runs the tests in the assembled tree, and pushes here. Each publication is one commit whose message names the corpus commit.
 
-This copy was published from corpus commit `9a70151` on 2026-09-03.
+This copy was published from corpus commit `d7c0b69` on 2026-09-04.
 
 ## Contributing, security, licence
 
 - **Issues** here are welcome: a wrong result, a missing case, an unclear sentence in this README. Please include the command you ran and what came back.
 - **Changes** go through the corpus and arrive here with the next publication; a pull request here is read and carried over by hand.
-- **Security reports**, in confidence: security@openhelvetia.swiss. The association answers within a working week.
+- **Security reports**, in confidence: admin@openhelvetia.swiss. The association answers within a working week.
 - **Licence:** Apache-2.0 (`LICENSE`, attribution in `NOTICE`).
