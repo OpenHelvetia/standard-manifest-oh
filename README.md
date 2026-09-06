@@ -130,7 +130,7 @@ The validator's own tests run every stage over entries, examples and test corpus
 
 The association develops all its modules in one corpus, on its own GitLab, where every change runs through a gate (formatting, Clippy without warnings, all tests, seal and drift checks). This repository is **assembled from that corpus** by the publication lane (`tools/publish-module.sh` there): it takes the crates and exactly the files their builds and tests need, runs the tests in the assembled tree, and pushes here. Each publication is one commit whose message names the corpus commit.
 
-This copy was published from corpus commit `d7c0b69` on 2026-09-04.
+This copy was published from corpus commit `93e2d01` on 2026-09-06.
 
 ## Contributing, security, licence
 

@@ -1,0 +1,43 @@
+# publiccode.yml — machine-readable description of this public software
+# (https://yml.publiccode.tools/, version 0.4). Assembled by the
+# association's publication lane; nothing here is an invitation, it is
+# a description.
+publiccodeYmlVersion: "0.4"
+name: standard-manifest-oh
+url: "https://github.com/OpenHelvetia/standard-manifest-oh"
+landingURL: "https://openhelvetia.swiss"
+developmentStatus: development
+softwareType: standalone/other
+platforms:
+  - linux
+  - mac
+categories:
+  - knowledge-management
+intendedAudience:
+  countries:
+    - ch
+  scope:
+    - government
+    - research-and-innovation
+legal:
+  license: Apache-2.0
+  mainCopyrightOwner: Verein OpenHelvetia
+  repoOwner: Verein OpenHelvetia
+maintenance:
+  type: internal
+  contacts:
+    - name: Verein OpenHelvetia
+      email: admin@openhelvetia.swiss
+localisation:
+  localisationReady: false
+  availableLanguages:
+    - en
+description:
+  en:
+    shortDescription: >-
+      The OpenHelvetia manifest standard: JSON Schema, JSON-LD context, SHACL shapes and ontology for describing a data source for AI systems, with the four-stage validator, the seal register and the agent-card signing tools
+    longDescription: >-
+      The OpenHelvetia manifest standard: JSON Schema, JSON-LD context, SHACL shapes and ontology for describing a data source for AI systems, with the four-stage validator, the seal register and the agent-card signing tools. One module of the OpenHelvetia platform, developed
+      in the association's corpus and published from it; the README
+      says which corpus commit this copy comes from and how to build,
+      test and run it offline on recorded fixtures.
